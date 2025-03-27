@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<ComponentGroup Id="ProductComponents">
+			<ComponentRef Id="MainAppFile"/>
+			<ComponentRef Id="MainAppShortcut"/>
+		</ComponentGroup>
+
+		<DirectoryRef Id="INSTALLFOLDER">
+			<Component Id="MainAppFile" Guid="{C8699E90-1514-499C-984D-8D4DA14FFCAA}">
+				<File Id="MyExe"
+                      Source="$(var.ProjectDir)..\$(var.Platform)\$(var.Configuration)\HelloWorldApp.exe"
+                      KeyPath="yes" />
+			</Component>
+		</DirectoryRef>
+
+		<DirectoryRef Id="InstallProgramMenuFolder">
+			<Component Id="MainAppShortcut" Guid="{D1234567-89AB-CDEF-0123-456789ABCDEF}">
+				<RegistryKey Root="HKCU" Key="Software\[Manufacturer]\[ProductName]\StartMenu" Action="createAndRemoveOnUninstall">
+					<RegistryValue Type="string" Name="ShortcutInstalled" Value="1" KeyPath="yes"/>
+				</RegistryKey>
+				<Shortcut Id="MainAppShortcut"
+                          Name="!(loc.ProductName_$(var.Platform))"
+                          Target="[INSTALLFOLDER]HelloWorldApp.exe"
+                          WorkingDirectory="INSTALLFOLDER"
+                          Icon="icon.ico" />
+				<RemoveFolder Id="RemoveStartMenu" Directory="InstallProgramMenuFolder" On="uninstall"/>
+			</Component>
+		</DirectoryRef>
+	</Fragment>
+</Wix>
